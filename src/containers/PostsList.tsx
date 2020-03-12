@@ -3,6 +3,7 @@ import { GenericListPosts } from '../specialty/GenericPostLists';
 import { Link } from 'react-router-dom';
 import { IPostTypesProperties } from '../types/PostTypes';
 import InfiniteScroll from "react-infinite-scroll-component";
+import ReactHtmlParser from 'react-html-parser';
 
 interface PropsI {
     results: IPostTypesProperties[],
@@ -12,7 +13,12 @@ interface PropsI {
 const PostsLists: React.FC<PropsI> = ({ results, fetchMore }) => (
     <InfiniteScroll dataLength={20} next={() => fetchMore()} hasMore={true} loader={null}>
         <GenericListPosts posts={results} postRender={item =>
-            <Link key={item.id} to={`/post/${item.slug}`}>{item.seo.title}</Link>
+            <div key={item.id} className="post-item">
+                <h2><Link to={`/post/${item.slug}`}>{item.seo.title}</Link></h2>
+                <article>
+                    <p>{ReactHtmlParser(item.seo.description)}</p>
+                </article>
+            </div>
         } />
     </InfiniteScroll>
 )

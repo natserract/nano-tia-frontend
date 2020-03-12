@@ -3,4 +3,18 @@
 a {
   font-size: 50px;
   display: block;
+  color: #000 !important;
+}
+
+.container {
+  padding: 50px 0;
+}
+
+.post-item {
+  margin-bottom: 50px;
+}
+
+.post-item a {
+  line-height: 1.2em;
+  margin-bottom: 10px;
 }
