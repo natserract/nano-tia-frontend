@@ -2,7 +2,7 @@
 import * as React from 'react'
 import { Helmet } from 'react-helmet';
 
-interface PostMetaI {
+export interface PostMetaI {
     seoTitle: string,
     seoDescription: string,
     seoSlug: string,

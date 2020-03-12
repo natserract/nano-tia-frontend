@@ -6,9 +6,9 @@ import { action } from 'typesafe-actions'
 import axios from 'axios';
 
 export const fetchRequest = () => action(PostActionTypes.FETCH_REQUEST);
-export const fetchPosts:ActionCreator<ThunkAction<Promise<any>, IPostTypeArray, null, Actions | any>> = () => async dispatch => {
+export const fetchPosts:ActionCreator<ThunkAction<Promise<any>, IPostTypeArray, null, Actions | any>> = (limit: string) => async dispatch => {
     dispatch(fetchRequest());
-    const API = "https://id.techinasia.com/wp-json/techinasia/3.0/categories/startups/posts?page=1";
+    const API = `https://id.techinasia.com/wp-json/techinasia/3.0/categories/startups/posts?page=1&per_page=${limit}`;
     await axios.get(API)
         .then(res => {
             dispatch({
@@ -16,7 +16,7 @@ export const fetchPosts:ActionCreator<ThunkAction<Promise<any>, IPostTypeArray, 
                 payload: { 
                     posts: res.data.posts
                 }
-            })
+            });
         })
         .catch(err => {
             dispatch(fetchError("Error"))

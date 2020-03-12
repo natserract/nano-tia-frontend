@@ -5,8 +5,6 @@ import { useParams, Redirect } from 'react-router-dom';
 import { RootState } from '../../reducers/Index';
 import * as PostAction from '../../actions/PostAction';
 import * as Helpers from '../../helpers/PostFinder'
-import ReactHtmlParser from 'react-html-parser';
-import { PostMeta } from './PostMeta';
 
 interface RouteParamI {
     slug: string
@@ -22,7 +20,9 @@ const mapDispatchToProps = (dispatch) => ({
 
 type Props = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 
-const PostDetail:React.FC<Props> = ({ postDispatch, results }) => {
+const LazyComponent = React.lazy(() => import("./PostPartPage"));
+
+const PostDetail: React.FC<Props> = ({ postDispatch, results }) => {
     const params = useParams<RouteParamI>();
     React.useEffect(() => {
         postDispatch()
@@ -30,18 +30,15 @@ const PostDetail:React.FC<Props> = ({ postDispatch, results }) => {
 
     const result = Helpers.findPostDetail(params, results);
     return result ? (
-        <div>
-           <PostMeta
-                seoTitle={result?.seo.title}
-                seoDescription={result?.seo.description}
-                seoSlug={result?.slug}
+        <React.Suspense fallback={<span>Loading...</span>}>
+           <LazyComponent
+             seoTitle={result?.seo.title}
+             seoDescription={result?.seo.description}
+             seoSlug={result?.slug}
+             content={result?.content}
            />
-            <h1>{ReactHtmlParser(result?.title)}</h1>
-            <div className="site-main-content">
-                { ReactHtmlParser(result?.content) }
-            </div>
-        </div>
-    ) : <Redirect to="/" /> 
+        </React.Suspense>
+    ) : <Redirect to="/" />
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostDetail)

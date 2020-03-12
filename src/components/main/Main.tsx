@@ -2,7 +2,6 @@ import * as React from 'react'
 import { connect } from 'react-redux';
 import { RootState } from '../../reducers/Index';
 import * as PostAction from '../../actions/PostAction';
-import { PostsLists } from '../../containers/PostsList';
 
 const mapStateToProps = (state: RootState) => ({
     loading: state.results.loading,
@@ -11,32 +10,37 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    postDispatch: () => dispatch(PostAction.fetchPosts())
-})
+    postRequest: () => dispatch(PostAction.fetchRequest()),
+    postDispatch: (limit: string) => dispatch(PostAction.fetchPosts(limit))
+});
+
+const LazyComponent = React.lazy(() => import('../../containers/PostsList'))
 
 type Props = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 
-const Home: React.FC<Props> = ({ results, postDispatch, loading, errors }) => {
+const Home: React.FC<Props> = ({ results, postDispatch, loading, errors, postRequest }) => {
     React.useEffect(() => {
-        postDispatch()
+        postDispatch('50');
     }, [postDispatch]);
+    
+    function fetchMore() {
+        postDispatch('20');
+    }
 
-    //make more readable
+    //switch loader to suspense
     const RenderPost = () => {
-        if(loading && !results.length) {
-            return <span>Loading...</span>
-        } else if (errors && !results.length) {
+        if (errors && !results.length) {
             return <span>Something went wrong!</span>
         } else {
             return (
-                <PostsLists results={results}/>
+                <React.Suspense fallback={<div>Loading...</div>}>
+                    <LazyComponent fetchMore={() => fetchMore()} results={results} />
+                </React.Suspense>
             )
         }
     }
 
-    console.log(process.env);
-
-    return <RenderPost/>
+    return <RenderPost />
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home)

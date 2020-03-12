@@ -7,6 +7,8 @@ import configureStore from '../store/Index';
 import Home from './main/Main';
 import PostDetail from './post/PostDetail';
 
+import "./App.css";
+
 export const store = configureStore();
 
 export default () => (
