@@ -1,9 +1,8 @@
 import * as React from 'react'
 import { connect } from 'react-redux';
 import { RootState } from '../../reducers/Index';
-import { Link } from 'react-router-dom';
 import * as PostAction from '../../actions/PostAction';
-import PostsLists from '../../containers/PostsList';
+import { PostsLists } from '../../containers/PostsList';
 
 const mapStateToProps = (state: RootState) => ({
     loading: state.results.loading,
@@ -22,16 +21,20 @@ const Home: React.FC<Props> = ({ results, postDispatch, loading, errors }) => {
         postDispatch()
     }, [postDispatch]);
 
+    //make more readable
     const RenderPost = () => {
-        return (loading && !results.length) ? <span>Loading...</span> : (errors && !results.length) ? 
-            <span>Error!</span> : ( 
-            <PostsLists posts={results} postRender={item =>
-                    <div key={item.id}>
-                        <Link to={`/post/${item.slug}`}>{item.seo.title}</Link>
-                    </div>
-                }/>
+        if(loading && !results.length) {
+            return <span>Loading...</span>
+        } else if (errors && !results.length) {
+            return <span>Something went wrong!</span>
+        } else {
+            return (
+                <PostsLists results={results}/>
             )
+        }
     }
+
+    console.log(process.env);
 
     return <RenderPost/>
 }

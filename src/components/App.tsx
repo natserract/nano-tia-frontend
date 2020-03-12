@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
-import configureStore from '../store/Store';
+import configureStore from '../store/Index';
 
 import Home from './main/Main';
 import PostDetail from './post/PostDetail';

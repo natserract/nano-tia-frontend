@@ -1,16 +1,17 @@
 
-import * as React from 'react'
 
-export interface GenericListProps<T> {
-    posts: T[];
-    postRender: (item: T) => JSX.Element
+import * as React from 'react';
+import { GenericListPosts } from '../specialty/GenericPostLists';
+import { Link } from 'react-router-dom';
+
+interface PropsI {
+    results: any,
 }
 
-type ComponentTypes<T = any> = React.FC<GenericListProps<T>>;
-
-const GenericListPosts:ComponentTypes = ({ posts, postRender }) => {
-    return (
-        <div>{ posts.map(postRender)}</div>
-    )
-}
-export default GenericListPosts
+export const PostsLists:React.FC<PropsI> = ({ results }) => (
+    <GenericListPosts posts={results} postRender={item =>
+        <div key={item.id}>
+            <Link to={`/post/${item.slug}`}>{item.seo.title}</Link>
+        </div>
+    }/>
+)

@@ -5,7 +5,8 @@ import { useParams, Redirect } from 'react-router-dom';
 import { RootState } from '../../reducers/Index';
 import * as PostAction from '../../actions/PostAction';
 import * as Helpers from '../../helpers/PostFinder'
-import { Helmet } from 'react-helmet';
+import ReactHtmlParser from 'react-html-parser';
+import { PostMeta } from './PostMeta';
 
 interface RouteParamI {
     slug: string
@@ -21,27 +22,26 @@ const mapDispatchToProps = (dispatch) => ({
 
 type Props = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 
-const ProductDetail:React.FC<Props> = ({ postDispatch, results }) => {
+const PostDetail:React.FC<Props> = ({ postDispatch, results }) => {
     const params = useParams<RouteParamI>();
     React.useEffect(() => {
         postDispatch()
     }, [postDispatch]);
 
-    const context = Helpers.findPostDetail(params, results);
-
-    return context ? (
+    const result = Helpers.findPostDetail(params, results);
+    return result ? (
         <div>
-            <Helmet titleTemplate="%s - nanoTIA" defaultTitle="My App">
-                <title>{context?.seo.title}</title>
-                <meta name="description" content={context?.seo.description}/>
-                <meta property="og:type" content="article"/>
-                <meta property="og:title" content={context?.seo.title}/>
-                <meta property="og:url" content={`http://localhost:3000/${context?.slug}`}/>
-            </Helmet>
-            <h1>{context?.title}</h1>
-            {context?.content}
+           <PostMeta
+                seoTitle={result?.seo.title}
+                seoDescription={result?.seo.description}
+                seoSlug={result?.slug}
+           />
+            <h1>{ReactHtmlParser(result?.title)}</h1>
+            <div className="site-main-content">
+                { ReactHtmlParser(result?.content) }
+            </div>
         </div>
     ) : <Redirect to="/" /> 
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProductDetail)
+export default connect(mapStateToProps, mapDispatchToProps)(PostDetail)
