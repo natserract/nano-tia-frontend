@@ -11,6 +11,3 @@ export function findPostDetail(params, state): IPostTypesProperties {
 
     return checkDataOnStore ? result : false
 }
-
-
- 

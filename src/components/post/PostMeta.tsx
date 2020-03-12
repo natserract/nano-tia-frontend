@@ -9,7 +9,7 @@ export interface PostMetaI {
 }
 
 export const PostMeta: React.FC<PostMetaI> = ({ seoTitle, seoDescription, seoSlug }) => (
-    <Helmet titleTemplate="%s - nanoTIA" defaultTitle="My App">
+    <Helmet titleTemplate="%s - nanoTIA" defaultTitle="nanoTIA">
         <title>{seoTitle}</title>
         <meta name="title" content={seoTitle}/>
         <meta name="description" content={seoDescription}/>

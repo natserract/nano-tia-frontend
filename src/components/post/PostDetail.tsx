@@ -5,6 +5,7 @@ import { useParams, Redirect } from 'react-router-dom';
 import { RootState } from '../../reducers/Index';
 import * as PostAction from '../../actions/PostAction';
 import * as Helpers from '../../helpers/PostFinder'
+import { Loader } from '../../specialty/Loader';
 
 interface RouteParamI {
     slug: string
@@ -15,7 +16,7 @@ const mapStateToProps = (state: RootState) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    postDispatch: () => dispatch(PostAction.fetchPosts())
+    postDispatch: (limit: string) => dispatch(PostAction.fetchPosts(limit))
 })
 
 type Props = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
@@ -25,19 +26,21 @@ const LazyComponent = React.lazy(() => import("./PostPartPage"));
 const PostDetail: React.FC<Props> = ({ postDispatch, results }) => {
     const params = useParams<RouteParamI>();
     React.useEffect(() => {
-        postDispatch()
+        postDispatch('20')
     }, [postDispatch]);
 
     const result = Helpers.findPostDetail(params, results);
     return result ? (
-        <React.Suspense fallback={<span>Loading...</span>}>
-           <LazyComponent
-             seoTitle={result?.seo.title}
-             seoDescription={result?.seo.description}
-             seoSlug={result?.slug}
-             content={result?.content}
-           />
-        </React.Suspense>
+        <div className="container">
+            <React.Suspense fallback={<Loader/>}>
+                <LazyComponent
+                    seoTitle={result?.seo.title}
+                    seoDescription={result?.seo.description}
+                    seoSlug={result?.slug}
+                    content={result?.content}
+                />
+            </React.Suspense>
+        </div>
     ) : <Redirect to="/" />
 }
 

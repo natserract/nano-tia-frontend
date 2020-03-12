@@ -5,14 +5,16 @@ export enum PostActionTypes {
     FETCH_ERROR = '@@posts/FETCH_ERROR'
 }
 
+export interface SEO {
+    title: string,
+    description: string 
+}
+
 export interface IPostTypesProperties {
     slug: string,
     title: string,
     content: string,
-    seo: {
-        title: string,
-        description: string
-    }
+    seo: SEO
 }
 export interface IPostTypeArray {
     readonly posts: IPostTypesProperties[],
