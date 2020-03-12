@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { connect } from 'react-redux';
-import { RootState } from '../../reducers';
+import { RootState } from '../../reducers/Index';
+import { Link } from 'react-router-dom';
 import * as PostAction from '../../actions/PostAction';
 import PostsLists from '../../containers/PostsList';
-import { Link } from 'react-router-dom';
 
 const mapStateToProps = (state: RootState) => ({
     loading: state.results.loading,
@@ -22,23 +22,18 @@ const Home: React.FC<Props> = ({ results, postDispatch, loading, errors }) => {
         postDispatch()
     }, [postDispatch]);
 
-    console.log(results);
-
     const RenderPost = () => {
-        return loading ?  <span>Loading...</span> : (
+        return (loading && !results.length) ? <span>Loading...</span> : (errors && !results.length) ? 
+            <span>Error!</span> : ( 
             <PostsLists posts={results} postRender={item =>
-                <div key={item.id}>
-                    <Link to={`/post/${item.slug}`}>{item.title}</Link>
-                </div>
-            }/>
-        )
+                    <div key={item.id}>
+                        <Link to={`/post/${item.slug}`}>{item.seo.title}</Link>
+                    </div>
+                }/>
+            )
     }
 
-    return (
-        <div>
-            <RenderPost/>
-        </div>
-    )
+    return <RenderPost/>
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home)

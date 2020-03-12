@@ -1,6 +1,3 @@
-
-import * as React from 'react';
-import { Redirect } from 'react-router-dom';
 import { IPostTypesProperties } from '../types/PostTypes';
 
 export function findPostDetail(params, state): IPostTypesProperties {

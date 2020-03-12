@@ -2,9 +2,10 @@
 import * as React from 'react'
 import { connect } from 'react-redux';
 import { useParams, Redirect } from 'react-router-dom';
-import { RootState } from '../../reducers';
+import { RootState } from '../../reducers/Index';
 import * as PostAction from '../../actions/PostAction';
 import * as Helpers from '../../helpers/PostFinder'
+import { Helmet } from 'react-helmet';
 
 interface RouteParamI {
     slug: string
@@ -30,8 +31,15 @@ const ProductDetail:React.FC<Props> = ({ postDispatch, results }) => {
 
     return context ? (
         <div>
-            <p>{context?.title}</p>
-            <span>{context?.content}</span>
+            <Helmet titleTemplate="%s - nanoTIA" defaultTitle="My App">
+                <title>{context?.seo.title}</title>
+                <meta name="description" content={context?.seo.description}/>
+                <meta property="og:type" content="article"/>
+                <meta property="og:title" content={context?.seo.title}/>
+                <meta property="og:url" content={`http://localhost:3000/${context?.slug}`}/>
+            </Helmet>
+            <h1>{context?.title}</h1>
+            {context?.content}
         </div>
     ) : <Redirect to="/" /> 
 }
