@@ -6,15 +6,15 @@ import { PostMeta } from './PostMeta';
 
 const Post: React.FC<{ content: string } & PostMetaI> = ({ seoTitle, seoDescription, seoSlug, content }) => {
     return (
-        <article>
+        <div className="main-content">
             <PostMeta
                 seoTitle={seoTitle}
                 seoDescription={seoDescription}
                 seoSlug={seoSlug}
             />
             <h1>{ReactHtmlParser(seoTitle)}</h1>
-            {ReactHtmlParser(content)}
-        </article>
+            <article>{ReactHtmlParser(content)}</article>
+        </div>
     )
 }
 

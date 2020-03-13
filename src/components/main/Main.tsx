@@ -5,12 +5,12 @@ import * as PostAction from '../../actions/PostAction';
 import { Loader } from '../../specialty/Loader';
 
 const mapStateToProps = (state: RootState) => ({
+    loading: state.results.loading,
     results: state.results.posts,
     errors: state.results.errors
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    postRequest: () => dispatch(PostAction.fetchRequest()),
     postDispatch: (limit: string) => dispatch(PostAction.fetchPosts(limit))
 });
 
@@ -18,20 +18,23 @@ const LazyComponent = React.lazy(() => import('../../containers/PostsList'))
 
 type Props = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 
-const Home: React.FC<Props> = ({ results, postDispatch, errors, postRequest }) => {
+const Home: React.FC<Props> = ({ results, postDispatch, errors, loading }) => {
     React.useEffect(() => {
         postDispatch('10');
     }, [postDispatch]);
 
 
-    //switch loader to suspense
+    const fetchMore = () => postDispatch('20');
+
     const RenderPost = () => {
-        if (errors && !results.length) {
+        if(loading && !results.length) {
+            return <Loader/>
+        } else if (errors && !results.length) {
             return <span>Something went wrong!</span>
         } else {
             return (
-                <React.Suspense fallback={<Loader/>}>
-                    <LazyComponent fetchMore={() => postDispatch('20')} results={results} />
+                <React.Suspense fallback={null}>
+                    <LazyComponent fetchMore={() => fetchMore()} results={results} />
                 </React.Suspense>
             )
         }

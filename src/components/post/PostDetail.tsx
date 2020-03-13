@@ -23,7 +23,7 @@ type Props = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchT
 
 const LazyComponent = React.lazy(() => import("./PostPartPage"));
 
-const PostDetail: React.FC<Props> = ({ postDispatch, results }) => {
+const PostDetail: React.SFC<Props> = ({ postDispatch, results }) => {
     const params = useParams<RouteParamI>();
     React.useEffect(() => {
         postDispatch('20')

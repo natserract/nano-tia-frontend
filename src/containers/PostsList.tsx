@@ -16,11 +16,11 @@ const PostsLists: React.FC<PropsI> = ({ results, fetchMore }) => (
             <div key={item.id} className="post-item">
                 <h2><Link to={`/post/${item.slug}`}>{item.seo.title}</Link></h2>
                 <article>
-                    <p>{ReactHtmlParser(item.seo.description)}</p>
+                    {ReactHtmlParser(item.seo.description)}
                 </article>
             </div>
         } />
     </InfiniteScroll>
 )
 
-export default PostsLists
+export default PostsLists;
