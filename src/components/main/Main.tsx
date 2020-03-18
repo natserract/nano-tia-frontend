@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { connect } from 'react-redux';
-import { RootState } from '../../reducers/Index';
 import * as PostAction from '../../actions/PostAction';
+import { connect } from 'react-redux';
 import { Loader } from '../../specialty/Loader';
+import { RootState } from '../../reducers/Index';
 
 const mapStateToProps = (state: RootState) => ({
     loading: state.results.loading,
@@ -11,30 +11,27 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    postDispatch: (limit: string) => dispatch(PostAction.fetchPosts(limit))
+    postDispatch: () => dispatch(PostAction.fetchPosts())
 });
-
-const LazyComponent = React.lazy(() => import('../../containers/PostsList'))
 
 type Props = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 
-const Home: React.FC<Props> = ({ results, postDispatch, errors, loading }) => {
+const LazyPostsList = React.lazy(() => import('./MainPostLists'))
+
+const Main: React.FC<Props> = ({ results, postDispatch, errors, loading }) => {
     React.useEffect(() => {
-        postDispatch('10');
+        postDispatch();
     }, [postDispatch]);
 
-
-    const fetchMore = () => postDispatch('20');
-
-    const RenderPost = () => {
-        if(loading && !results.length) {
-            return <Loader/>
+    const PostMain = () => {
+        if (loading && !results.length) {
+            return <Loader />
         } else if (errors && !results.length) {
             return <span>Something went wrong!</span>
         } else {
             return (
                 <React.Suspense fallback={null}>
-                    <LazyComponent fetchMore={() => fetchMore()} results={results} />
+                    <LazyPostsList results={results} />
                 </React.Suspense>
             )
         }
@@ -42,9 +39,10 @@ const Home: React.FC<Props> = ({ results, postDispatch, errors, loading }) => {
 
     return (
         <div className="container">
-            <RenderPost />
-        </div>
+            <PostMain />
+        </div >
+
     )
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home)
+export default connect(mapStateToProps, mapDispatchToProps)(Main)

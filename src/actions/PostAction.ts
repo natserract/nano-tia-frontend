@@ -7,9 +7,9 @@ import axios from 'axios';
 
 export const fetchRequest = () => action(PostActionTypes.FETCH_REQUEST);
 
-export const fetchPosts:ActionCreator<ThunkAction<Promise<any>, IPostTypeArray, null, Actions>> = (limit: string) => async dispatch => {
+export const fetchPosts:ActionCreator<ThunkAction<Promise<any>, IPostTypeArray, null, Actions>> = () => async dispatch => {
     dispatch(fetchRequest());
-    const API = `https://id.techinasia.com/wp-json/techinasia/3.0/categories/startups/posts?page=1&per_page=${limit}`;
+    const API = `https://id.techinasia.com/wp-json/techinasia/3.0/categories/startups/posts`;
     await axios.get(API)
         .then(res => {
             dispatch({
