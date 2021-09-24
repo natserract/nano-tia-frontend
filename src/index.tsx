@@ -5,11 +5,14 @@ import { BrowserRouter } from 'react-router-dom';
 import Routes from './Routes';
 import * as serviceWorker from './serviceWorker';
 import { AllContextProvider } from './store/configureStore'
+import Toast from './components/toast';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 ReactDOM.render(
   <AllContextProvider>
     <BrowserRouter>
-      <React.Suspense fallback={<h2>Loading</h2>}>
+      <Toast />
+      <React.Suspense fallback={<CircularProgress />}>
         <Routes />
       </React.Suspense>
     </BrowserRouter>
